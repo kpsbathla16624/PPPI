@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "632707070296",
+    "project_id": "pppi-409904",
+    "storage_bucket": "pppi-409904.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632707070296:android:53f462899fef2dafbc4d2d",
+        "android_client_info": {
+          "package_name": "com.example.pppi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHiY6CCdhRIhE6Zh_UPaRDKTJguhNoTq4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

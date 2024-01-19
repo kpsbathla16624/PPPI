@@ -2,6 +2,7 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id 'com.google.gms.google-services'
 }
 
 def localProperties = new Properties()
@@ -23,7 +24,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.example.test_app"
+    namespace "com.example.pppi"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -39,10 +40,10 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-
+     
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.test_app"
+        applicationId "com.example.pppi"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
@@ -64,4 +65,7 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation platform('com.google.firebase:firebase-bom:32.7.0')
+    implementation 'com.google.firebase:firebase-analytics'
+}
