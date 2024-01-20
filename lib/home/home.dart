@@ -5,6 +5,7 @@ import 'package:pppi/drawers/dispatch.dart';
 import 'package:pppi/drawers/order.dart';
 import 'package:pppi/drawers/purchase.dart';
 import 'package:pppi/orders/stock.dart';
+import 'package:pppi/employee/emp.dart';
 
 class home extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -77,6 +78,9 @@ class _homeState extends State<home> {
         break;
       case 4:
         _body = daybookDrawer();
+        break;
+      case 5:
+        _body = EmployeeDrawer();
         break;
     }
   }
@@ -199,6 +203,24 @@ class _homeState extends State<home> {
                 ],
               ),
               selected: _selectedIndex == 4,
+              onTap: () {
+                _onItemTapped(4);
+                widget.scaffoldKey.currentState?.openEndDrawer();
+              },
+            ),
+            ListTile(
+              title: const Row(
+                children: [
+                  Icon(Icons.person),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text('Employees',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+                ],
+              ),
+              selected: _selectedIndex == 5,
               onTap: () {
                 _onItemTapped(4);
                 widget.scaffoldKey.currentState?.openEndDrawer();
