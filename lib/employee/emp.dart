@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pppi/purchase/add_raw.dart';
+import 'package:pppi/employee/add_emp.dart';
 import 'package:pppi/home/home.dart';
 import 'package:pppi/purchase/purchase_history.dart';
 
@@ -33,7 +33,7 @@ class _EmployeeDrawerState extends State<EmployeeDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddRawMaterialScreen(),
+                    builder: (context) => ADD_empScreen(),
                   ),
                 );
               },
@@ -41,7 +41,7 @@ class _EmployeeDrawerState extends State<EmployeeDrawer> {
                 backgroundColor: Colors.blueAccent,
               ),
               child: Text(
-                'Add Purchase records',
+                'Add Employee Data',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: const Color.fromARGB(255, 0, 0, 0),
@@ -63,7 +63,7 @@ class _EmployeeDrawerState extends State<EmployeeDrawer> {
                 backgroundColor: Colors.blueAccent,
               ),
               child: Text(
-                'Purchase  History',
+                'Employee List',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: const Color.fromARGB(255, 0, 0, 0),
