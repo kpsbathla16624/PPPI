@@ -9,10 +9,10 @@ class ADD_empScreen extends StatefulWidget {
 }
 
 class _ADD_empScreenState extends State<ADD_empScreen> {
-  String _material_type = 'PP';
-  String _sellerName = '';
-  double quantity = 0;
-  String _inkcolor = '';
+  String Emp_name = "";
+
+  double Salary = 0;
+
   String formattedDateTime =
       DateFormat('dd/MM/yyyy, HH:mm').format(DateTime.now());
 
@@ -20,12 +20,6 @@ class _ADD_empScreenState extends State<ADD_empScreen> {
       FirebaseFirestore.instance.collection('purchase-pp');
   CollectionReference purchaseLD =
       FirebaseFirestore.instance.collection('purchase-LD');
-  CollectionReference purchaseFilm =
-      FirebaseFirestore.instance.collection('purchase-Film');
-  CollectionReference purchaseMoulding =
-      FirebaseFirestore.instance.collection('purchase-moulding');
-  CollectionReference purchaseink =
-      FirebaseFirestore.instance.collection('purchase-ink');
 
   Future<void> insertFirestore() async {
     try {

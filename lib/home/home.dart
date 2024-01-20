@@ -222,7 +222,7 @@ class _homeState extends State<home> {
               ),
               selected: _selectedIndex == 5,
               onTap: () {
-                _onItemTapped(4);
+                _onItemTapped(5);
                 widget.scaffoldKey.currentState?.openEndDrawer();
               },
             ),
