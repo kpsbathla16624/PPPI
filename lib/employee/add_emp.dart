@@ -12,65 +12,23 @@ class _ADD_empScreenState extends State<ADD_empScreen> {
   String Emp_name = "";
 
   double Salary = 0;
+  String empType = "Permanent";
 
   String formattedDateTime =
       DateFormat('dd/MM/yyyy, HH:mm').format(DateTime.now());
 
-  CollectionReference purchasePP =
-      FirebaseFirestore.instance.collection('purchase-pp');
-  CollectionReference purchaseLD =
-      FirebaseFirestore.instance.collection('purchase-LD');
+  CollectionReference empData = FirebaseFirestore.instance.collection('emp');
 
   Future<void> insertFirestore() async {
     try {
       // Prepare data to insert
       Map<String, dynamic> data = {
-        'material type': _material_type,
-        'seller Name': _sellerName,
-        'quantity': quantity,
-        'Date Time': formattedDateTime,
+        'Employee Name': Emp_name,
+        'Salary': Salary,
+        'type': empType,
+        'date': formattedDateTime
       };
-
-      if (_material_type == "Ink") {
-        data = {
-          'material type': _material_type,
-          'seller Name': _sellerName,
-          'Ink color': _inkcolor,
-          'quantity': quantity,
-          'Date Time': formattedDateTime,
-        };
-      } else if (_material_type != "Ink") {
-        data = {
-          'material type': _material_type,
-          'seller Name': _sellerName,
-          'quantity': quantity,
-          'Date Time': formattedDateTime,
-        };
-      }
-      // Insert data into Firestore
-      if (_material_type == "PP") {
-        await purchasePP.add(data);
-        await FirebaseFirestore.instance
-            .collection('stock')
-            .doc('wUNr03PFWTAx36YXldFy')
-            .update({
-          'stock-PP': FieldValue.increment(quantity),
-        });
-      } else if (_material_type == "LDPE") {
-        await purchaseLD.add(data);
-        await FirebaseFirestore.instance
-            .collection('stock')
-            .doc('wUNr03PFWTAx36YXldFy')
-            .update({
-          'stock-LD': FieldValue.increment(quantity),
-        });
-      } else if (_material_type == "film") {
-        await purchaseFilm.add(data);
-      } else if (_material_type == "moulding") {
-        await purchaseMoulding.add(data);
-      } else if (_material_type == "Ink") {
-        await purchaseink.add(data);
-      }
+      await empData.add(data);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -112,13 +70,13 @@ class _ADD_empScreenState extends State<ADD_empScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               DropdownButtonFormField<String>(
-                value: _material_type,
+                value: empType,
                 onChanged: (value) {
                   setState(() {
-                    _material_type = value!;
+                    empType = value!;
                   });
                 },
-                items: ['PP', 'LDPE', 'film', 'moulding', 'Ink']
+                items: ['Permanent', 'Temporary']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -127,36 +85,26 @@ class _ADD_empScreenState extends State<ADD_empScreen> {
                 }).toList(),
                 decoration: InputDecoration(labelText: 'material Type'),
               ),
-              SizedBox(height: 10),
               TextFormField(
                 onChanged: (value) {
                   setState(() {
-                    _sellerName = value;
+                    Emp_name = value;
                   });
                 },
-                decoration: InputDecoration(labelText: 'seller Name'),
+                decoration: InputDecoration(labelText: 'Employee Name '),
               ),
               SizedBox(height: 10),
               TextFormField(
                 onChanged: (value) {
                   setState(() {
-                    quantity = double.tryParse(value) ?? 0;
+                    Salary = double.tryParse(value) ?? 0;
                   });
                 },
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'quantity'),
+                decoration: InputDecoration(labelText: 'Employee Salary '),
               ),
-              SizedBox(height: 10),
-              if (_material_type == 'Ink')
-                TextFormField(
-                  onChanged: (value) {
-                    setState(() {
-                      _inkcolor = value;
-                    });
-                  },
-                  decoration: InputDecoration(labelText: 'ink color'),
-                ),
-              SizedBox(height: 20),
+              SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
                 onPressed: _submit,
                 child: Text('submit'),
