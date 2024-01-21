@@ -21,9 +21,9 @@ class _ViewEMPScreenState extends State<ViewEMPScreen> {
   Future<void> _loadDataFromFirestore() async {
     try {
       final permanentEMP =
-          await FirebaseFirestore.instance.collection('purchase-pp').get();
+          await FirebaseFirestore.instance.collection('emp').get();
       final temporaryEMP =
-          await FirebaseFirestore.instance.collection('purchase-LD').get();
+          await FirebaseFirestore.instance.collection('emp').get();
 
       setState(() {
         PermanentEMP = permanentEMP.docs
@@ -123,7 +123,7 @@ class _ViewEMPScreenState extends State<ViewEMPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Purchase History'),
+        title: Text('Employee list'),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
