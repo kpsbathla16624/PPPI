@@ -9,14 +9,7 @@ double Stock_film = 0;
 double Stock_moulding = 0;
 double order_PP = 0;
 double order_LD = 0;
-List<String> employee = [
-  'e1',
-  'e2',
-  'e3',
-  'e4',
-  'e5',
-  ' e6'
-];
+List<String> employee = [];
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

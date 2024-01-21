@@ -7,6 +7,7 @@ Future<void> updateStock() async {
   order_LD = 0;
   Stock_PP = 0;
   Stock_LD = 0;
+  employee = [];
 
   try {
     final firestore = FirebaseFirestore.instance;
@@ -19,6 +20,11 @@ Future<void> updateStock() async {
         order_PP = doc['order-PP'] as double? ?? 0;
 
         order_LD = doc['order-LD'] as double? ?? 0;
+      }
+      QuerySnapshot emp = await firestore.collection('emp').get();
+      for (final doc in emp.docs) {
+        String employeeName = doc['Employee Name'] as String? ?? '';
+        employee.add(employeeName);
       }
     }
 
