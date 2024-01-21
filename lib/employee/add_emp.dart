@@ -83,7 +83,7 @@ class _ADD_empScreenState extends State<ADD_empScreen> {
                     child: Text(value),
                   );
                 }).toList(),
-                decoration: InputDecoration(labelText: 'material Type'),
+                decoration: InputDecoration(labelText: 'Employee Type'),
               ),
               TextFormField(
                 onChanged: (value) {

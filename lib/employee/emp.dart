@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pppi/employee/add_emp.dart';
+import 'package:pppi/employee/view_emp.dart';
 import 'package:pppi/home/home.dart';
-import 'package:pppi/purchase/purchase_history.dart';
 
 class EmployeeDrawer extends StatefulWidget {
   const EmployeeDrawer({super.key});
@@ -55,7 +55,7 @@ class _EmployeeDrawerState extends State<EmployeeDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ViewInventoryScreen(),
+                    builder: (context) => ViewEMPScreen(),
                   ),
                 );
               },
