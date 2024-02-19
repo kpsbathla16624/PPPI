@@ -13,19 +13,13 @@ class _AddRawMaterialScreenState extends State<AddRawMaterialScreen> {
   String _sellerName = '';
   double quantity = 0;
   String _inkcolor = '';
-  String formattedDateTime =
-      DateFormat('dd/MM/yyyy, HH:mm').format(DateTime.now());
+  String formattedDateTime = DateFormat('dd/MM/yyyy, HH:mm').format(DateTime.now());
 
-  CollectionReference purchasePP =
-      FirebaseFirestore.instance.collection('purchase-pp');
-  CollectionReference purchaseLD =
-      FirebaseFirestore.instance.collection('purchase-LD');
-  CollectionReference purchaseFilm =
-      FirebaseFirestore.instance.collection('purchase-Film');
-  CollectionReference purchaseMoulding =
-      FirebaseFirestore.instance.collection('purchase-moulding');
-  CollectionReference purchaseink =
-      FirebaseFirestore.instance.collection('purchase-ink');
+  CollectionReference purchasePP = FirebaseFirestore.instance.collection('purchase-pp');
+  CollectionReference purchaseLD = FirebaseFirestore.instance.collection('purchase-LD');
+  CollectionReference purchaseFilm = FirebaseFirestore.instance.collection('purchase-Film');
+  CollectionReference purchaseMoulding = FirebaseFirestore.instance.collection('purchase-moulding');
+  CollectionReference purchaseink = FirebaseFirestore.instance.collection('purchase-ink');
 
   Future<void> insertFirestore() async {
     try {
@@ -56,18 +50,12 @@ class _AddRawMaterialScreenState extends State<AddRawMaterialScreen> {
       // Insert data into Firestore
       if (_material_type == "PP") {
         await purchasePP.add(data);
-        await FirebaseFirestore.instance
-            .collection('stock')
-            .doc('wUNr03PFWTAx36YXldFy')
-            .update({
+        await FirebaseFirestore.instance.collection('stock').doc('wUNr03PFWTAx36YXldFy').update({
           'stock-PP': FieldValue.increment(quantity),
         });
       } else if (_material_type == "LDPE") {
         await purchaseLD.add(data);
-        await FirebaseFirestore.instance
-            .collection('stock')
-            .doc('wUNr03PFWTAx36YXldFy')
-            .update({
+        await FirebaseFirestore.instance.collection('stock').doc('wUNr03PFWTAx36YXldFy').update({
           'stock-LD': FieldValue.increment(quantity),
         });
       } else if (_material_type == "film") {
@@ -109,7 +97,13 @@ class _AddRawMaterialScreenState extends State<AddRawMaterialScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Raw Material'),
+        iconTheme: IconThemeData(color: Colors.white),
+        title: Text(
+          'Add Raw Material',
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        backgroundColor: Color.fromARGB(255, 1, 41, 46),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -124,8 +118,7 @@ class _AddRawMaterialScreenState extends State<AddRawMaterialScreen> {
                     _material_type = value!;
                   });
                 },
-                items: ['PP', 'LDPE', 'film', 'moulding', 'Ink']
-                    .map<DropdownMenuItem<String>>((String value) {
+                items: ['PP', 'LDPE', 'film', 'moulding', 'Ink'].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),

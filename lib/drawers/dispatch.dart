@@ -22,52 +22,69 @@ class _dispatchdrawerState extends State<dispatchdrawer> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Dispatch Management '),
+          leading: Icon(
+            Icons.fire_truck_outlined,
+            color: Colors.white,
+          ),
+          title: Text(
+            'Dispatch Management',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Color.fromARGB(255, 1, 41, 46),
+          centerTitle: false,
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DispatchScreen(),
+            Card(
+              color: Colors.blue[400],
+              child: ListTile(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => DispatchScreen()));
+                },
+                leading: const Icon(
+                  Icons.import_export_rounded,
+                  size: 60,
+                  color: Colors.black,
+                ),
+                title: const Text(
+                  'Dispatch Goods',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 27,
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'Dispatch Goods',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
+                ),
+                subtitle: const Text(
+                  'Add records of sent orders',
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
             SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewDispatchScreen(),
+            Card(
+              color: Colors.blue[400],
+              child: ListTile(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ViewDispatchScreen()));
+                },
+                leading: const Icon(
+                  Icons.history,
+                  size: 60,
+                  color: Colors.black,
+                ),
+                title: const Text(
+                  'Dispatch history',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 27,
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'Dispatch History',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
+                ),
+                subtitle: const Text(
+                  'view history of sent orders',
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),

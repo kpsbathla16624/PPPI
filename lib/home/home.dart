@@ -91,7 +91,7 @@ class _homeState extends State<home> {
       key: widget.scaffoldKey,
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 1, 41, 46),
-        title: Text(
+        title: const Text(
           'Parmarth Print Pack Industry',
           style: TextStyle(color: Colors.white),
         ),

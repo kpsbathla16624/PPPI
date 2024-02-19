@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pppi/theme/appbartheme.dart';
 
 class ViewInventoryScreen extends StatefulWidget {
   @override
@@ -23,17 +24,11 @@ class _ViewInventoryScreenState extends State<ViewInventoryScreen> {
 
   Future<void> _loadDataFromFirestore() async {
     try {
-      final purchasePP =
-          await FirebaseFirestore.instance.collection('purchase-pp').get();
-      final purchaseLD =
-          await FirebaseFirestore.instance.collection('purchase-LD').get();
-      final purchaseFilm =
-          await FirebaseFirestore.instance.collection('purchase-Film').get();
-      final purchaseMoulding = await FirebaseFirestore.instance
-          .collection('purchase-moulding')
-          .get();
-      final purchaseInk =
-          await FirebaseFirestore.instance.collection('purchase-ink').get();
+      final purchasePP = await FirebaseFirestore.instance.collection('purchase-pp').get();
+      final purchaseLD = await FirebaseFirestore.instance.collection('purchase-LD').get();
+      final purchaseFilm = await FirebaseFirestore.instance.collection('purchase-Film').get();
+      final purchaseMoulding = await FirebaseFirestore.instance.collection('purchase-moulding').get();
+      final purchaseInk = await FirebaseFirestore.instance.collection('purchase-ink').get();
 
       setState(() {
         _purchasePPData = purchasePP.docs
@@ -107,8 +102,7 @@ class _ViewInventoryScreenState extends State<ViewInventoryScreen> {
     ).toList();
   }
 
-  Widget _buildDataTable(
-      List<Map<String, dynamic>> data, List<String> columns) {
+  Widget _buildDataTable(List<Map<String, dynamic>> data, List<String> columns) {
     if (data.isEmpty) {
       return Center(
         child: Text('No data available. Please add data.'),
@@ -138,8 +132,7 @@ class _ViewInventoryScreenState extends State<ViewInventoryScreen> {
     );
   }
 
-  Widget _buildSection(List<Map<String, dynamic>> data, String title,
-      List<String> columnsOrder) {
+  Widget _buildSection(List<Map<String, dynamic>> data, String title, List<String> columnsOrder) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -150,9 +143,7 @@ class _ViewInventoryScreenState extends State<ViewInventoryScreen> {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
-        _isLoading
-            ? Center(child: CircularProgressIndicator())
-            : _buildDataTable(data, columnsOrder),
+        _isLoading ? Center(child: CircularProgressIndicator()) : _buildDataTable(data, columnsOrder),
       ],
     );
   }
@@ -161,27 +152,21 @@ class _ViewInventoryScreenState extends State<ViewInventoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Purchase History'),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Color.fromARGB(255, 1, 41, 46),
+        title: Text('Purchase History' , style: TextStyle(color: Colors.white),),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            _buildSection(_purchasePPData, 'Purchase PP',
-                ['material type', 'seller Name', 'quantity', 'Date Time']),
-            _buildSection(_purchaseLDData, 'Purchase LD',
-                ['material type', 'seller Name', 'quantity', 'Date Time']),
-            _buildSection(_purchaseFilmData, 'Purchase Film',
-                ['material type', 'seller Name', 'quantity', 'Date Time']),
-            _buildSection(_purchaseMouldingData, 'Purchase Moulding',
-                ['material type', 'seller Name', 'quantity', 'Date Time']),
-            _buildSection(_purchaseInkData, 'Purchase Ink', [
-              'material type',
-              'seller Name',
-              'quantity',
-              'Ink color',
-              'Date Time'
-            ]),
+            _buildSection(_purchasePPData, 'Purchase PP', ['material type', 'seller Name', 'quantity', 'Date Time']),
+            _buildSection(_purchaseLDData, 'Purchase LD', ['material type', 'seller Name', 'quantity', 'Date Time']),
+            _buildSection(_purchaseFilmData, 'Purchase Film', ['material type', 'seller Name', 'quantity', 'Date Time']),
+            _buildSection(_purchaseMouldingData, 'Purchase Moulding', ['material type', 'seller Name', 'quantity', 'Date Time']),
+            _buildSection(
+                _purchaseInkData, 'Purchase Ink', ['material type', 'seller Name', 'quantity', 'Ink color', 'Date Time']),
           ],
         ),
       ),

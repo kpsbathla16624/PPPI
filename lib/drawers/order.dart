@@ -24,119 +24,148 @@ class _orderDrawerState extends State<orderDrawer> {
         ));
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Order Management'),
+        appBar:  AppBar(
+          leading: Icon(
+            Icons.post_add_rounded,
+            color: Colors.white,
+          ),
+          title: Text(
+            'Order Management',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Color.fromARGB(255, 1, 41, 46),
+          centerTitle: false,
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Add_order(),
+            Card(
+              color: Colors.blue[400],
+              child: ListTile(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Add_order()));
+                },
+                leading: const Icon(
+                  Icons.add_chart_outlined,
+                  size: 60,
+                  color: Colors.black,
+                ),
+                title: const Text(
+                  'Add Orders',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 27,
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'Add Order',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
+                ),
+                subtitle: const Text(
+                  'orders for PP,LD',
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewOrderLDhistoryScreen(),
+            const SizedBox(height: 16.0),
+            Card(
+              color: Colors.blue[400],
+              child: ListTile(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ViewOrderLDhistoryScreen()));
+                },
+                leading: const Icon(
+                  Icons.production_quantity_limits,
+                  size: 60,
+                  color: Colors.black,
+                ),
+                title: const Text(
+                  'Pending Orders - LDPE',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 27,
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'Pending Orders - LDPE',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
+                ),
+                subtitle: const Text(
+                  'view pending Ld orders',
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewOrderPPhistoryScreen(),
+            const SizedBox(height: 16.0),
+            Card(
+              color: Colors.blue[400],
+              child: ListTile(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ViewOrderPPhistoryScreen()));
+                },
+                leading: const Icon(
+                  Icons.production_quantity_limits,
+                  size: 60,
+                  color: Colors.black,
+                ),
+                title: const Text(
+                  'Pending Orders - PP',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 27,
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'Pending Orders -PP',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
+                ),
+                subtitle: const Text(
+                  'view pending PP orders',
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewCompletedOrdersScreen(),
+            const SizedBox(height: 16.0),
+            Card(
+              color: Colors.blue[400],
+              child: ListTile(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ViewCompletedOrdersScreen()));
+                },
+                leading: const Icon(
+                  Icons.add_task_sharp,
+                  size: 60,
+                  color: Colors.black,
+                ),
+                title: const Text(
+                  'Completed orders',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 27,
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'Completed Orders ',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
+                ),
+                subtitle: const Text(
+                  'view completed  orders',
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => StockScreen(),
+            const SizedBox(height: 16.0),
+            Card(
+              color: Colors.blue[400],
+              child: ListTile(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => StockScreen()));
+                },
+                leading: const Icon(
+                  Icons.stacked_bar_chart,
+                  size: 60,
+                  color: Colors.black,
+                ),
+                title: const Text(
+                  'View Material Stocks',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 27,
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'View Stocks ',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
+                ),
+                subtitle: const Text(
+                  'view available raw materials ',
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
