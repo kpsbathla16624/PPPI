@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:pppi/circular_chart.dart';
+import 'package:pppi/HomeDashboard.dart';
 import 'package:pppi/drawers/daybook.dart';
 import 'package:pppi/drawers/dispatch.dart';
 import 'package:pppi/drawers/order.dart';
 import 'package:pppi/drawers/purchase.dart';
 import 'package:pppi/orders/stock.dart';
 import 'package:pppi/employee/emp.dart';
+import 'package:pppi/theme/appcolors.dart';
 
 class home extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -18,14 +19,11 @@ class home extends StatefulWidget {
 
 class _homeState extends State<home> {
   int _selectedIndex = 0;
-
-  Widget _body = Scaffold(); // Placeholder widget as initial body
+  Widget _body = Scaffold();
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      // Update the body based on the selected index
-
       _updateBody();
     });
   }
@@ -34,50 +32,26 @@ class _homeState extends State<home> {
   void initState() {
     updateStock();
     super.initState();
-
     _onItemTapped(0);
-
-    // Avoid doing asynchronous operations in initState
   }
 
-  // Update the body widget based on the selected index
   void _updateBody() {
     updateStock();
     switch (_selectedIndex) {
       case 0:
-        _body = circular_chart();
-        //const Column(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     Text(
-        //       'WELCOME',
-        //       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 50),
-        //     ),
-        //     Center(
-        //       child: Row(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         children: [
-        //           Text('click on '),
-        //           Icon(Icons.menu),
-        //           Text('to continue')
-        //         ],
-        //       ),
-        //     )
-        //   ],
-        // );
-
+        _body = HomeDashBoard();
         break;
       case 1:
-        _body = PurchaseDrawer(); // Use the PurchaseDrawer widget directly
+        _body = PurchaseDrawer();
         break;
       case 2:
         _body = dispatchdrawer();
         break;
       case 3:
-        _body = orderDrawer();
+        _body = OrderDrawer();
         break;
       case 4:
-        _body = daybookDrawer();
+        _body = DaybookDrawer();
         break;
       case 5:
         _body = EmployeeDrawer();
@@ -85,148 +59,155 @@ class _homeState extends State<home> {
     }
   }
 
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String title,
+    required int index,
+    String? imagePath,
+  }) {
+    bool isSelected = _selectedIndex == index;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: isSelected ? AppColors.accentColor.withOpacity(0.2) : Colors.transparent,
+      ),
+      child: ListTile(
+        leading: imagePath != null
+            ? Image.asset(
+                imagePath,
+                height: 24,
+                width: 24,
+                color: isSelected ? AppColors.accentColor : AppColors.textSecondary,
+              )
+            : Icon(
+                icon,
+                color: isSelected ? AppColors.accentColor : AppColors.textSecondary,
+                size: 24,
+              ),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+            color: isSelected ? AppColors.accentColor : AppColors.textSecondary,
+          ),
+        ),
+        selected: isSelected,
+        onTap: () {
+          _onItemTapped(index);
+          widget.scaffoldKey.currentState?.openEndDrawer();
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: widget.scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 1, 41, 46),
-        title: const Text(
-          'Parmarth Print Pack Industry',
-          style: TextStyle(color: Colors.white),
+    return Theme(
+      data: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: AppColors.primaryDark,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: AppColors.secondaryDark,
+          elevation: 0,
         ),
-        iconTheme: IconThemeData(color: Colors.white),
       ),
-      body: _body,
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-                decoration: BoxDecoration(color: Colors.greenAccent),
-                child: Column(
-                  children: [
-                    Text(
-                      'Parmarth Print Pack industry ',
-                      style: TextStyle(
+      child: Scaffold(
+        key: widget.scaffoldKey,
+        appBar: AppBar(),
+        body: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: _body,
+        ),
+        drawer: Drawer(
+          backgroundColor: AppColors.primaryDark,
+          child: Column(
+            children: [
+              DrawerHeader(
+                decoration: const BoxDecoration(
+                  color: AppColors.secondaryDark,
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.accentColor.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.business,
+                          size: 40,
+                          color: AppColors.accentColor,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Parmarth Print Pack',
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 25),
+                        ),
+                      ),
+                      const Text(
+                        'Industry Management',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    _buildDrawerItem(
+                      icon: Icons.dashboard_rounded,
+                      title: 'Dashboard',
+                      index: 0,
+                    ),
+                    _buildDrawerItem(
+                      icon: Icons.shopping_cart_rounded,
+                      title: 'Purchase',
+                      index: 1,
+                    ),
+                    _buildDrawerItem(
+                      icon: Icons.local_shipping_rounded,
+                      title: 'Dispatch',
+                      index: 2,
+                    ),
+                    _buildDrawerItem(
+                      icon: Icons.assignment_rounded,
+                      title: 'Order',
+                      index: 3,
+                    ),
+                    _buildDrawerItem(
+                      icon: Icons.book_rounded,
+                      title: 'Daybook',
+                      index: 4,
+                    ),
+                    _buildDrawerItem(
+                      icon: Icons.people_rounded,
+                      title: 'Employees',
+                      index: 5,
+                    ),
+                    const Divider(color: AppColors.secondaryDark, height: 32),
+                    _buildDrawerItem(
+                      icon: Icons.settings_rounded,
+                      title: 'Settings',
+                      index: 6,
                     ),
                   ],
-                )),
-            ListTile(
-              title: const Row(
-                children: [
-                  Icon(Icons.home),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Home',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                  ),
-                ],
+                ),
               ),
-              selected: _selectedIndex == 0,
-              onTap: () {
-                _onItemTapped(0);
-                widget.scaffoldKey.currentState?.openEndDrawer();
-              },
-            ),
-            ListTile(
-              title: const Row(
-                children: [
-                  Icon(Icons.add_shopping_cart_outlined),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text('Purchase',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-                ],
-              ),
-              selected: _selectedIndex == 1,
-              onTap: () {
-                _onItemTapped(1);
-                widget.scaffoldKey.currentState?.openEndDrawer();
-              },
-            ),
-            ListTile(
-              title: Row(
-                children: [
-                  Image.asset(
-                    'assets/dispatch-icon.jpg',
-                    height: 26,
-                    width: 26,
-                  ),
-                  const SizedBox(width: 10),
-                  const Text('Dispatch',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-                ],
-              ),
-              selected: _selectedIndex == 2,
-              onTap: () {
-                _onItemTapped(2);
-                widget.scaffoldKey.currentState?.openEndDrawer();
-              },
-            ),
-            ListTile(
-              title: const Row(
-                children: [
-                  Icon(Icons.add_task_outlined),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text('Order',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-                ],
-              ),
-              selected: _selectedIndex == 3,
-              onTap: () {
-                _onItemTapped(3);
-                widget.scaffoldKey.currentState?.openEndDrawer();
-              },
-            ),
-            ListTile(
-              title: const Row(
-                children: [
-                  Icon(Icons.note_add),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text('Daybook',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-                ],
-              ),
-              selected: _selectedIndex == 4,
-              onTap: () {
-                _onItemTapped(4);
-                widget.scaffoldKey.currentState?.openEndDrawer();
-              },
-            ),
-            ListTile(
-              title: const Row(
-                children: [
-                  Icon(Icons.person),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text('Employees',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-                ],
-              ),
-              selected: _selectedIndex == 5,
-              onTap: () {
-                _onItemTapped(5);
-                widget.scaffoldKey.currentState?.openEndDrawer();
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

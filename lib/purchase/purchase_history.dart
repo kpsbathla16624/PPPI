@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pppi/theme/appbartheme.dart';
+import 'package:pppi/theme/appcolors.dart'; // Ensure this is the right import for your theme
 
 class ViewInventoryScreen extends StatefulWidget {
   @override
@@ -95,17 +96,17 @@ class _ViewInventoryScreenState extends State<ViewInventoryScreen> {
         return DataColumn(
           label: Text(
             '$column',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
           ),
         );
       },
     ).toList();
   }
 
-  Widget _buildDataTable(List<Map<String, dynamic>> data, List<String> columns) {
+  Widget _buildDataTable(List<Map<String, dynamic>> data, List<String> columnsOrder) {
     if (data.isEmpty) {
       return Center(
-        child: Text('No data available. Please add data.'),
+        child: Text('No data available. Please add data.', style: TextStyle(color: AppColors.textSecondary)),
       );
     }
 
@@ -113,14 +114,17 @@ class _ViewInventoryScreenState extends State<ViewInventoryScreen> {
       scrollDirection: Axis.horizontal,
       child: SingleChildScrollView(
         child: DataTable(
-          columns: _buildDataColumns(columns),
+          columns: _buildDataColumns(columnsOrder),
           rows: data
               .map(
                 (row) => DataRow(
-                  cells: columns
+                  cells: columnsOrder
                       .map(
                         (column) => DataCell(
-                          Text('${row[column]}'),
+                          Text(
+                            '${row[column]}',
+                            style: TextStyle(color: AppColors.textPrimary),
+                          ),
                         ),
                       )
                       .toList(),
@@ -133,18 +137,28 @@ class _ViewInventoryScreenState extends State<ViewInventoryScreen> {
   }
 
   Widget _buildSection(List<Map<String, dynamic>> data, String title, List<String> columnsOrder) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            title,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    return Container(
+      margin: EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: AppColors.cardDark,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 6),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              title,
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+            ),
           ),
-        ),
-        _isLoading ? Center(child: CircularProgressIndicator()) : _buildDataTable(data, columnsOrder),
-      ],
+          _isLoading ? Center(child: CircularProgressIndicator()) : _buildDataTable(data, columnsOrder),
+        ],
+      ),
     );
   }
 
@@ -154,11 +168,11 @@ class _ViewInventoryScreenState extends State<ViewInventoryScreen> {
       appBar: AppBar(
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Color.fromARGB(255, 1, 41, 46),
-        title: Text('Purchase History' , style: TextStyle(color: Colors.white),),
+        backgroundColor: AppColors.primaryDark,
+        title: Text('Purchase History', style: TextStyle(color: Colors.white)),
       ),
       body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
+        padding: EdgeInsets.all(16),
         child: Column(
           children: [
             _buildSection(_purchasePPData, 'Purchase PP', ['material type', 'seller Name', 'quantity', 'Date Time']),
