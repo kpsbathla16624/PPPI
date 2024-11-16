@@ -5,15 +5,99 @@ import 'package:pppi/orders/orders-PP.dart';
 import 'package:pppi/orders/orders-LD.dart';
 import 'package:pppi/orders/completd_order.dart';
 import 'package:pppi/orders/stockscreen.dart';
+import 'package:pppi/theme/appcolors.dart';
 
-class orderDrawer extends StatefulWidget {
-  const orderDrawer({super.key});
+class OrderDrawer extends StatefulWidget {
+  const OrderDrawer({super.key});
 
   @override
-  State<orderDrawer> createState() => _orderDrawerState();
+  State<OrderDrawer> createState() => _OrderDrawerState();
 }
 
-class _orderDrawerState extends State<orderDrawer> {
+class _OrderDrawerState extends State<OrderDrawer> {
+  Widget _buildFeatureCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Ink(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.accentColor.withOpacity(0.2),
+                  AppColors.cardDark,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppColors.accentColor.withOpacity(0.1),
+                width: 1,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.accentColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      icon,
+                      size: 32,
+                      color: AppColors.accentColor,
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitle,
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: AppColors.textSecondary,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -23,124 +107,133 @@ class _orderDrawerState extends State<orderDrawer> {
           builder: (context) => home(),
         ));
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Order Management'),
+      child: Theme(
+        data: ThemeData.dark().copyWith(
+          scaffoldBackgroundColor: AppColors.primaryDark,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: AppColors.secondaryDark,
+            elevation: 0,
+          ),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Add_order(),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'Add Order',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
-                ),
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_rounded, color: AppColors.textSecondary),
+              onPressed: () => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => home()),
               ),
             ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewOrderLDhistoryScreen(),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'Pending Orders - LDPE',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
+            title: const Row(
+              children: [
+                Icon(
+                  Icons.post_add_rounded,
+                  color: AppColors.accentColor,
                 ),
-              ),
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewOrderPPhistoryScreen(),
+                SizedBox(width: 12),
+                Text(
+                  'Order Management',
+                  style: TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'Pending Orders -PP',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
                 ),
-              ),
+              ],
             ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewCompletedOrdersScreen(),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.search_rounded, color: AppColors.textSecondary),
+                onPressed: () {},
+              ),
+              const SizedBox(width: 8),
+            ],
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Order Dashboard',
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Manage your orders and track their status',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'Completed Orders ',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
                 ),
-              ),
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => StockScreen(),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'View Stocks ',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
+                _buildFeatureCard(
+                  icon: Icons.add_chart_outlined,
+                  title: 'Add Orders',
+                  subtitle: 'Create new orders for PP and LD materials',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Add_order()),
+                    );
+                  },
                 ),
-              ),
+                _buildFeatureCard(
+                  icon: Icons.production_quantity_limits,
+                  title: 'Pending Orders - LDPE',
+                  subtitle: 'View and manage pending LDPE orders',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ViewOrderLDhistoryScreen()),
+                    );
+                  },
+                ),
+                _buildFeatureCard(
+                  icon: Icons.production_quantity_limits,
+                  title: 'Pending Orders - PP',
+                  subtitle: 'View and manage pending PP orders',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ViewOrderPPhistoryScreen()),
+                    );
+                  },
+                ),
+                _buildFeatureCard(
+                  icon: Icons.add_task_sharp,
+                  title: 'Completed Orders',
+                  subtitle: 'View history of completed orders',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ViewCompletedOrdersScreen()),
+                    );
+                  },
+                ),
+                _buildFeatureCard(
+                  icon: Icons.stacked_bar_chart,
+                  title: 'Material Stocks',
+                  subtitle: 'Check available raw materials inventory',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => StockScreen()),
+                    );
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

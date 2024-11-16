@@ -22,52 +22,69 @@ class _EmployeeDrawerState extends State<EmployeeDrawer> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('employee management '),
+          leading: Icon(
+            Icons.person,
+            color: Colors.white,
+          ),
+          title: Text(
+            'Employee Mnagement ',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Color.fromARGB(255, 1, 41, 46),
+          centerTitle: false,
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ADD_empScreen(),
+            Card(
+              color: Colors.blue[400],
+              child: ListTile(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ADD_empScreen()));
+                },
+                leading: const Icon(
+                  Icons.person_add_alt_1,
+                  size: 60,
+                  color: Colors.black,
+                ),
+                title: const Text(
+                  'Add Employee',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 27,
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'Add Employee Data',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
+                ),
+                subtitle: const Text(
+                  'Add Employee Data ',
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
             SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewEMPScreen(),
+            Card(
+              color: Colors.blue[400],
+              child: ListTile(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEMPScreen()));
+                },
+                leading: const Icon(
+                  Icons.person_pin,
+                  size: 60,
+                  color: Colors.black,
+                ),
+                title: const Text(
+                  'Employee list ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 27,
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-              ),
-              child: Text(
-                'Employee List',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18,
+                ),
+                subtitle: const Text(
+                  'view all employees and workers list ',
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
