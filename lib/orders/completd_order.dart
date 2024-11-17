@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pppi/theme/appcolors.dart'; // Ensure correct theme import
 
 class ViewCompletedOrdersScreen extends StatefulWidget {
   @override
-  _ViewCompletedOrdersScreenState createState() =>
-      _ViewCompletedOrdersScreenState();
+  _ViewCompletedOrdersScreenState createState() => _ViewCompletedOrdersScreenState();
 }
 
 class _ViewCompletedOrdersScreenState extends State<ViewCompletedOrdersScreen> {
@@ -20,35 +20,16 @@ class _ViewCompletedOrdersScreenState extends State<ViewCompletedOrdersScreen> {
 
   Future<void> _loadCompletedOrdersFromFirestore() async {
     try {
-      final completedOrders =
-          await FirebaseFirestore.instance.collection('completed-order').get();
+      final completedOrders = await FirebaseFirestore.instance.collection('completed-order').get();
 
       setState(() {
-        _completedOrdersPP = completedOrders.docs
-            .where((doc) =>
-                doc.data()['material type'] == 'PP' &&
-                doc.data()['print type'] != null &&
-                doc.data()['Buyer Name'] != null &&
-                doc.data()['Quantity'] != null &&
-                doc.data()['Size'] != null &&
-                doc.data()['Guage'] != null &&
-                doc.data()['Date and Time'] != null)
-            .map((doc) {
+        _completedOrdersPP = completedOrders.docs.where((doc) => doc.data()['material type'] == 'PP').map((doc) {
           Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
           data['documentId'] = doc.id;
           return data;
         }).toList();
 
-        _completedOrdersLDPE = completedOrders.docs
-            .where((doc) =>
-                doc.data()['material type'] == 'LDPE' &&
-                doc.data()['print type'] != null &&
-                doc.data()['Buyer Name'] != null &&
-                doc.data()['Quantity'] != null &&
-                doc.data()['Size'] != null &&
-                doc.data()['Guage'] != null &&
-                doc.data()['Date and Time'] != null)
-            .map((doc) {
+        _completedOrdersLDPE = completedOrders.docs.where((doc) => doc.data()['material type'] == 'LDPE').map((doc) {
           Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
           data['documentId'] = doc.id;
           return data;
@@ -72,15 +53,17 @@ class _ViewCompletedOrdersScreenState extends State<ViewCompletedOrdersScreen> {
         return DataColumn(
           label: Text(
             '$column',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+            ),
           ),
         );
       },
     ).toList();
   }
 
-  Widget _buildDataTable(
-      List<Map<String, dynamic>> data, List<String> columns) {
+  Widget _buildDataTable(List<Map<String, dynamic>> data, List<String> columns) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SingleChildScrollView(
@@ -94,7 +77,10 @@ class _ViewCompletedOrdersScreenState extends State<ViewCompletedOrdersScreen> {
                   cells: columns
                       .map(
                         (column) => DataCell(
-                          Text('${entry.value[column]}'),
+                          Text(
+                            '${entry.value[column]}',
+                            style: TextStyle(color: AppColors.textPrimary),
+                          ),
                         ),
                       )
                       .toList(),
@@ -106,20 +92,39 @@ class _ViewCompletedOrdersScreenState extends State<ViewCompletedOrdersScreen> {
     );
   }
 
-  Widget _buildSection(
-      List<Map<String, dynamic>> data, List<String> columnsOrder, String name) {
+  Widget _buildSection(List<Map<String, dynamic>> data, List<String> columnsOrder, String name) {
     if (_isLoading) {
       return Center(child: CircularProgressIndicator());
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (data.isEmpty)
-          Center(child: Text('No completed orders available  for $name '))
-        else
-          _buildDataTable(data, columnsOrder),
-      ],
+    return Container(
+      margin: EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: AppColors.cardDark,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 6),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Completed Orders for $name',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ),
+          data.isEmpty
+              ? Center(child: Text('No completed orders available for $name', style: TextStyle(color: AppColors.textSecondary)))
+              : _buildDataTable(data, columnsOrder),
+        ],
+      ),
     );
   }
 
@@ -127,10 +132,13 @@ class _ViewCompletedOrdersScreenState extends State<ViewCompletedOrdersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Completed Orders'),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.primaryDark,
+        title: Text('Completed Orders', style: TextStyle(color: Colors.white)),
       ),
       body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
+        padding: EdgeInsets.all(16),
         child: Column(
           children: [
             _buildSection(
@@ -157,7 +165,7 @@ class _ViewCompletedOrdersScreenState extends State<ViewCompletedOrdersScreen> {
                   'Guage',
                   'Date and Time',
                 ],
-                'LD'),
+                'LDPE'),
           ],
         ),
       ),

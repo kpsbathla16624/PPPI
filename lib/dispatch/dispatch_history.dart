@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pppi/theme/appcolors.dart'; // Ensure correct theme import
 
 class ViewDispatchScreen extends StatefulWidget {
   @override
@@ -8,7 +9,6 @@ class ViewDispatchScreen extends StatefulWidget {
 
 class _ViewDispatchScreenState extends State<ViewDispatchScreen> {
   List<Map<String, dynamic>> dispatchData = [];
-
   bool _isLoading = true;
 
   @override
@@ -17,25 +17,6 @@ class _ViewDispatchScreenState extends State<ViewDispatchScreen> {
     _loadDataFromFirestore();
   }
 
-  // Future<void> _loadDataFromFirestore() async {
-  //   try {
-  //     final purchasePP =
-  //         await FirebaseFirestore.instance.collection('dispatch').get();
-
-  //     setState(() {
-  //       dispatchData = purchasePP.docs.map((doc) => doc.data()).toList();
-
-  //       _isLoading = false;
-  //     });
-  //   } catch (e) {
-  //     print('Error loading data from Firestore: $e');
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('Error loading data from Firestore.'),
-  //       ),
-  //     );
-  //   }
-  // }
   Future<void> _loadDataFromFirestore() async {
     try {
       final dispatch =
@@ -54,7 +35,6 @@ class _ViewDispatchScreenState extends State<ViewDispatchScreen> {
                 doc.data()['date Time'] != null)
             .map((doc) => doc.data())
             .toList();
-
         _isLoading = false;
       });
     } catch (e) {
@@ -73,18 +53,17 @@ class _ViewDispatchScreenState extends State<ViewDispatchScreen> {
         return DataColumn(
           label: Text(
             '$column',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
           ),
         );
       },
     ).toList();
   }
 
-  Widget _buildDataTable(
-      List<Map<String, dynamic>> data, List<String> columns) {
+  Widget _buildDataTable(List<Map<String, dynamic>> data, List<String> columns) {
     if (data.isEmpty) {
       return Center(
-        child: Text('No data available. Please add data.'),
+        child: Text('No data available. Please add data.', style: TextStyle(color: AppColors.textSecondary)),
       );
     }
 
@@ -99,7 +78,10 @@ class _ViewDispatchScreenState extends State<ViewDispatchScreen> {
                   cells: columns
                       .map(
                         (column) => DataCell(
-                          Text('${row[column]}'),
+                          Text(
+                            '${row[column]}',
+                            style: TextStyle(color: AppColors.textPrimary),
+                          ),
                         ),
                       )
                       .toList(),
@@ -111,15 +93,29 @@ class _ViewDispatchScreenState extends State<ViewDispatchScreen> {
     );
   }
 
-  Widget _buildSection(
-      List<Map<String, dynamic>> data, List<String> columnsOrder) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _isLoading
-            ? Center(child: CircularProgressIndicator())
-            : _buildDataTable(data, columnsOrder),
-      ],
+  Widget _buildSection(List<Map<String, dynamic>> data, String title, List<String> columnsOrder) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: AppColors.cardDark,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 6),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              title,
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+            ),
+          ),
+          _isLoading ? Center(child: CircularProgressIndicator()) : _buildDataTable(data, columnsOrder),
+        ],
+      ),
     );
   }
 
@@ -127,13 +123,16 @@ class _ViewDispatchScreenState extends State<ViewDispatchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('dispatch History'),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.primaryDark,
+        title: Text('Dispatch History', style: TextStyle(color: Colors.white)),
       ),
       body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
+        padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            _buildSection(dispatchData, [
+            _buildSection(dispatchData, 'Dispatch Records', [
               'polythene Type',
               'print Type',
               'buyer Name',

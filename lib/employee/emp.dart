@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pppi/employee/add_emp.dart';
 import 'package:pppi/employee/view_emp.dart';
 import 'package:pppi/home/home.dart';
+import 'package:pppi/theme/appcolors.dart';
 
 class EmployeeDrawer extends StatefulWidget {
   const EmployeeDrawer({super.key});
@@ -11,6 +12,89 @@ class EmployeeDrawer extends StatefulWidget {
 }
 
 class _EmployeeDrawerState extends State<EmployeeDrawer> {
+  Widget _buildFeatureCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Ink(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.accentColor.withOpacity(0.2),
+                  AppColors.cardDark,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppColors.accentColor.withOpacity(0.1),
+                width: 1,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.accentColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      icon,
+                      size: 32,
+                      color: AppColors.accentColor,
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitle,
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: AppColors.textSecondary,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -20,75 +104,93 @@ class _EmployeeDrawerState extends State<EmployeeDrawer> {
           builder: (context) => home(),
         ));
       },
-      child: Scaffold(
-        appBar: AppBar(
-          leading: Icon(
-            Icons.person,
-            color: Colors.white,
+      child: Theme(
+        data: ThemeData.dark().copyWith(
+          scaffoldBackgroundColor: AppColors.primaryDark,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: AppColors.secondaryDark,
+            elevation: 0,
           ),
-          title: Text(
-            'Employee Mnagement ',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Color.fromARGB(255, 1, 41, 46),
-          centerTitle: false,
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Card(
-              color: Colors.blue[400],
-              child: ListTile(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ADD_empScreen()));
-                },
-                leading: const Icon(
-                  Icons.person_add_alt_1,
-                  size: 60,
-                  color: Colors.black,
-                ),
-                title: const Text(
-                  'Add Employee',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 27,
-                  ),
-                ),
-                subtitle: const Text(
-                  'Add Employee Data ',
-                  style: TextStyle(color: Colors.black),
-                ),
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_rounded, color: AppColors.textSecondary),
+              onPressed: () => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => home()),
               ),
             ),
-            SizedBox(height: 16.0),
-            Card(
-              color: Colors.blue[400],
-              child: ListTile(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEMPScreen()));
-                },
-                leading: const Icon(
-                  Icons.person_pin,
-                  size: 60,
-                  color: Colors.black,
+            title: const Row(
+              children: [
+                Icon(
+                  Icons.person,
+                  color: AppColors.accentColor,
                 ),
-                title: const Text(
-                  'Employee list ',
+                SizedBox(width: 12),
+                Text(
+                  'Employee Management',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 27,
+                    color: AppColors.textPrimary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                subtitle: const Text(
-                  'view all employees and workers list ',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
+              ],
             ),
-          ],
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Employee Dashboard',
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Manage and track employee data efficiently',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                _buildFeatureCard(
+                  icon: Icons.person_add_alt_1,
+                  title: 'Add Employee',
+                  subtitle: 'Add new employee data',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddEmployeeScreen()),
+                    );
+                  },
+                ),
+                _buildFeatureCard(
+                  icon: Icons.person_pin,
+                  title: 'Employee List',
+                  subtitle: 'View all employees and worker data',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ViewEMPScreen()),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

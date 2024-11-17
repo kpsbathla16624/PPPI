@@ -2,19 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pppi/main.dart';
+import 'package:pppi/theme/appcolors.dart';
 
-class add_record extends StatefulWidget {
-  const add_record({super.key});
+class AddRecord extends StatefulWidget {
+  const AddRecord({super.key});
 
   @override
-  State<add_record> createState() => _add_recordState();
+  State<AddRecord> createState() => _AddRecordState();
 }
 
-class _add_recordState extends State<add_record> {
+class _AddRecordState extends State<AddRecord> {
   TextEditingController _expenseController = TextEditingController();
   String? description;
   DateTime _selectedDate = DateTime.now();
   String? _selectedEmployee;
+  TimeOfDay _selectedTime = TimeOfDay(hour: 12, minute: 0); // Default time 12:00 PM
 
   Future<void> _recordExpense() async {
     try {
@@ -29,9 +31,16 @@ class _add_recordState extends State<add_record> {
         throw Exception('Invalid amount format');
       }
 
-      // Get the description from the user
+      // Combine the date and time
+      DateTime combinedDateTime = DateTime(
+        _selectedDate.year,
+        _selectedDate.month,
+        _selectedDate.day,
+        _selectedTime.hour,
+        _selectedTime.minute,
+      );
 
-      String date = DateFormat('dd/MM/yyyy, hh:mm a').format(_selectedDate);
+      String date = DateFormat('dd/MM/yyyy, hh:mm a').format(combinedDateTime);
 
       // Convert expense data to a Map
       Map<String, dynamic> expenseData = {
@@ -65,7 +74,16 @@ class _add_recordState extends State<add_record> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Expense recorded successfully.'),
+          content: Row(
+            children: const [
+              Icon(Icons.check_circle, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Expense recorded successfully.'),
+            ],
+          ),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
       );
 
@@ -75,7 +93,16 @@ class _add_recordState extends State<add_record> {
       print('Error recording expense: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error recording expense.'),
+          content: Row(
+            children: const [
+              Icon(Icons.error_outline, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Error recording expense.'),
+            ],
+          ),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
       );
     }
@@ -96,72 +123,211 @@ class _add_recordState extends State<add_record> {
     }
   }
 
+  Future<void> _selectTime(BuildContext context) async {
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,
+    );
+
+    if (pickedTime != null && pickedTime != _selectedTime) {
+      setState(() {
+        _selectedTime = pickedTime;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Record Expenses'),
+    return Theme(
+      data: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: AppColors.primaryDark,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: AppColors.secondaryDark,
+          elevation: 0,
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Selected Date: ${DateFormat('dd/MM/yyyy, hh:mm a').format(_selectedDate)}',
-              style: TextStyle(fontWeight: FontWeight.bold),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Record Expenses',
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
             ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () => _selectDate(context),
-              child: Text('Select Date'),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _expenseController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Expense Amount',
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Selected Date: ${DateFormat('dd/MM/yyyy').format(_selectedDate)}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    onChanged: (value) {
-                      setState(() {
-                        description = value;
-                      });
-                    },
-                    decoration:
-                        InputDecoration(labelText: 'Expense Description'),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => _selectDate(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.accentColor,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-              ],
-            ),
-            if (description == 'salary')
-              DropdownButtonFormField<String>(
-                value: _selectedEmployee,
-                items: employee.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                decoration: InputDecoration(labelText: 'Employee name'),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedEmployee = newValue;
-                  });
-                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.calendar_today),
+                    SizedBox(width: 8),
+                    Text('Select Date'),
+                  ],
+                ),
               ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _recordExpense(),
-              child: Text('Record Expense'),
-            ),
-          ],
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => _selectTime(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.accentColor,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.access_time),
+                    SizedBox(width: 8),
+                    Text('Select Time'),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Selected Time: ${_selectedTime.format(context)}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.cardDark,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppColors.accentColor.withOpacity(0.1),
+                    width: 1,
+                  ),
+                ),
+                child: TextField(
+                  controller: _expenseController,
+                  keyboardType: TextInputType.number,
+                  style: const TextStyle(color: AppColors.textPrimary),
+                  decoration: InputDecoration(
+                    labelText: 'Expense Amount',
+                    labelStyle: TextStyle(color: AppColors.textSecondary),
+                    prefixIcon: const Icon(Icons.money, color: AppColors.accentColor),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: AppColors.cardDark,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.cardDark,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppColors.accentColor.withOpacity(0.1),
+                    width: 1,
+                  ),
+                ),
+                child: TextFormField(
+                  onChanged: (value) {
+                    setState(() {
+                      description = value;
+                    });
+                  },
+                  style: const TextStyle(color: AppColors.textPrimary),
+                  decoration: InputDecoration(
+                    labelText: 'Expense Description',
+                    labelStyle: TextStyle(color: AppColors.textSecondary),
+                    prefixIcon: const Icon(Icons.description, color: AppColors.accentColor),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: AppColors.cardDark,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  ),
+                ),
+              ),
+              if (description == 'salary')
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: AppColors.cardDark,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: AppColors.accentColor.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  ),
+                  child: DropdownButtonFormField<String>(
+                    value: _selectedEmployee,
+                    items: employee.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    decoration: InputDecoration(
+                      labelText: 'Employee name',
+                      labelStyle: TextStyle(color: AppColors.textSecondary),
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedEmployee = newValue;
+                      });
+                    },
+                  ),
+                ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => _recordExpense(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.accentColor,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.save),
+                    SizedBox(width: 8),
+                    Text('Record Expense'),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

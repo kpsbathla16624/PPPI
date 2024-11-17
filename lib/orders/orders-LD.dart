@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pppi/orders/stock.dart';
+import 'package:pppi/theme/appcolors.dart'; // Ensure correct theme import
 
 class ViewOrderLDhistoryScreen extends StatefulWidget {
   @override
@@ -26,19 +27,12 @@ class _ViewOrderLDhistoryScreenState extends State<ViewOrderLDhistoryScreen> {
 
       setState(() {
         _OrderLDData = orderLD.docs
-            .where((doc) =>
-                doc.data()['material type'] != null &&
-                doc.data()['print type'] != null &&
-                doc.data()['Buyer Name'] != null &&
-                doc.data()['Quantity'] != null &&
-                doc.data()['Size'] != null &&
-                doc.data()['Guage'] != null &&
-                doc.data()['Date and Time'] != null)
             .map((doc) {
-          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-          data['documentId'] = doc.id;
-          return data;
-        }).toList();
+              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+              data['documentId'] = doc.id;
+              return data;
+            })
+            .toList();
         _isLoading = false;
       });
     } catch (e) {
@@ -57,7 +51,10 @@ class _ViewOrderLDhistoryScreenState extends State<ViewOrderLDhistoryScreen> {
         return DataColumn(
           label: Text(
             '$column',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary, // Consistent color
+            ),
           ),
         );
       },
@@ -68,7 +65,8 @@ class _ViewOrderLDhistoryScreenState extends State<ViewOrderLDhistoryScreen> {
       List<Map<String, dynamic>> data, List<String> columns) {
     if (data.isEmpty) {
       return Center(
-        child: Text('No data available. Please add data.'),
+        child: Text('No data available. Please add data.',
+            style: TextStyle(color: AppColors.textSecondary)),
       );
     }
 
@@ -85,7 +83,10 @@ class _ViewOrderLDhistoryScreenState extends State<ViewOrderLDhistoryScreen> {
                   cells: columns
                       .map(
                         (column) => DataCell(
-                          Text('${entry.value[column]}'),
+                          Text(
+                            '${entry.value[column]}',
+                            style: TextStyle(color: AppColors.textPrimary),
+                          ),
                         ),
                       )
                       .toList(),
@@ -107,15 +108,35 @@ class _ViewOrderLDhistoryScreenState extends State<ViewOrderLDhistoryScreen> {
     );
   }
 
-  Widget _buildSection(
-      List<Map<String, dynamic>> data, List<String> columnsOrder) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _isLoading
-            ? Center(child: CircularProgressIndicator())
-            : _buildDataTable(data, columnsOrder),
-      ],
+  Widget _buildSection(List<Map<String, dynamic>> data, List<String> columnsOrder) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: AppColors.cardDark,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.black26, offset: Offset(0, 2), blurRadius: 6),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Order LD History',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ),
+          _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : _buildDataTable(data, columnsOrder),
+        ],
+      ),
     );
   }
 
@@ -123,21 +144,26 @@ class _ViewOrderLDhistoryScreenState extends State<ViewOrderLDhistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Order LD'),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.primaryDark,
+        title: Text('Order LD', style: TextStyle(color: Colors.white)),
       ),
       body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
+        padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            _buildSection(_OrderLDData, [
-              'material type',
-              'print type',
-              'Buyer Name',
-              'Quantity',
-              'Size',
-              'Guage',
-              'Date and Time',
-            ]),
+            _buildSection(
+                _OrderLDData,
+                [
+                  'material type',
+                  'print type',
+                  'Buyer Name',
+                  'Quantity',
+                  'Size',
+                  'Guage',
+                  'Date and Time',
+                ]),
           ],
         ),
       ),
@@ -152,31 +178,6 @@ class _ViewOrderLDhistoryScreenState extends State<ViewOrderLDhistoryScreen> {
     );
   }
 
-//   void _moveSelectedDocuments() async {
-//     for (int index in _selectedRows) {
-//       String documentId = _OrderLDData[index]['documentId'];
-
-//       // Save the selected document to the 'completed-order' collection
-//       await FirebaseFirestore.instance.collection('completed-order').add(
-//             _OrderLDData[index],
-//           );
-
-//       // Delete the selected document from the 'order-LD' collection
-//       await FirebaseFirestore.instance
-//           .collection('order-LD')
-//           .doc(documentId)
-//           .delete();
-//       Navigator.of(context).pushReplacement(MaterialPageRoute(
-//         builder: (context) => ViewOrderLDhistoryScreen(),
-//       ));
-//       updateStock();
-//     }
-
-//     setState(() {
-//       _selectedRows.clear();
-//     });
-//   }
-// }
   void _moveSelectedDocuments() async {
     for (int index in _selectedRows) {
       String documentId = _OrderLDData[index]['documentId'];

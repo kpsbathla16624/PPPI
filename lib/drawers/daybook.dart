@@ -184,7 +184,7 @@ class _DaybookDrawerState extends State<DaybookDrawer> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => add_record()),
+                      MaterialPageRoute(builder: (context) => AddRecord()),
                     );
                   },
                 ),
